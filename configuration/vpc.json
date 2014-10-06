@@ -1,0 +1,39 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Application VPC",
+  
+  "Parameters": {
+    "CIDRBLOCK": {
+      "Description": "CIDR block for the VPC",
+      "Type": "String",
+      "Default": "10.0.0.0/16",
+      "AllowedValues": [
+        "10.0.0.0/16",
+        "10.1.0.0/16",
+        "10.2.0.0/16"
+      ],
+      "ConstraintDescription": "must be a valid CIDR block which is part of our network plan"
+    }
+  },
+  
+  "Resources": {
+    "VPC": {
+      "Type": "AWS::EC2::VPC",
+      "Properties": {
+        "CidrBlock": {
+          "Ref": "CIDRBLOCK"
+        },
+        "Tags": [
+          {
+            "Key": "VPC",
+            "Value": "Application VPC"
+          },
+          {
+            "Key": "Network",
+            "Value": "Public-and-Private"
+          }
+        ]
+      }
+    }
+  }
+}

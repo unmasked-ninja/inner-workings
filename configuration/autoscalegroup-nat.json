@@ -1,0 +1,16 @@
+{
+  parameters: { name: "ami" },
+  resources: {
+    loadbalancer: { },
+    autoscalegroup: {
+      loadconfiguration: {
+        ami: ami,
+        instancesize: t1.micro
+      },
+      groupconfiguration: {
+          min: 1,
+          max: 1
+      }
+    }
+  }
+}
