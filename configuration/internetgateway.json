@@ -1,0 +1,44 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Applicatoin Internet Gateway",
+  
+  "Parameters": {
+    "VPCID": {
+      "Description": "The application VPC Id",
+      "Type": "String"
+    }
+  },
+  
+  "Resources": {
+    "InternetGateway": {
+      "Type": "AWS::EC2::InternetGateway",
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Network",
+            "Value": "Public"
+          }
+        ]
+      }
+    },
+    "AttachGateway": {
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPCID"
+        },
+        "InternetGatewayId": {
+          "Ref": "InternetGateway"
+        }
+      }
+    }
+  },
+  
+  "Outputs": {
+    "INTERNETGATEWAYID": {
+      "Value": {
+        "Ref": "InternetGateway"
+      }
+    }
+  }
+}
