@@ -1,16 +1,46 @@
 {
-  parameters: { name: "ami" },
-  resources: {
-    loadbalancer: { },
-    autoscalegroup: {
-      loadconfiguration: {
-        ami: ami,
-        instancesize: t1.micro
-      },
-      groupconfiguration: {
-          min: 1,
-          max: 1
-      }
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "NAT autoscaling group",
+  
+  "Parameters": { 
+    "IMAGEID": {
+      "Description": "AMI image Id",
+      "Type": "String"
+    },
+    "LOADBALANCERNAME": {
+      "Description": "Load balancer name",
+      "Type": "String"
     }
+  },
+  
+  "Resources": {
+    "SimpleConfig" : {
+      "Type": "AWS::AutoScaling::LaunchConfiguration",
+      "Properties" : {
+        "ImageId" : { "Ref": "IMAGEID" },
+        "SecurityGroups" : [ { "Ref" : "myEC2SecurityGroup" }, "myExistingEC2SecurityGroup" ],
+        "InstanceType" : "m1.small",
+        "BlockDeviceMappings" : [ 
+          {
+            "DeviceName" : "/dev/sdk",
+            "Ebs" : {"VolumeSize" : "50"}
+          }, 
+          {
+            "DeviceName" : "/dev/sdc",
+            "VirtualName" : "ephemeral0"
+          }
+        ]
+      }
+    },
+    "MyServerGroup" : {
+      "Type" : "AWS::AutoScaling::AutoScalingGroup",
+      "Properties" : {
+        "AvailabilityZones" : { "Fn::GetAZs" : ""},
+        "LaunchConfigurationName" : { "Ref" : "SimpleConfig" },
+        "MinSize" : "1",
+        "MaxSize" : "3",
+        "LoadBalancerNames" : [ { "Ref" : "LOADBALANCERNAME" } ]
+      }
+    },
   }
 }

@@ -1,0 +1,34 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "NAT load balancer",
+  
+  "Resources": {
+    "MyLoadBalancer" : {
+      "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
+      "Properties" : {
+        "AvailabilityZones": [
+          "us-east-1a"
+        ],
+        "Listeners": [ 
+          {
+            "LoadBalancerPort": "80",
+            "InstancePort": "80",
+            "Protocol": "HTTP"
+          },
+          {
+            "LoadBalancerPort": "443",
+            "InstancePort": "443",
+            "Protocol": "HTTPS"
+          }
+        ]
+      },
+      "HealthCheck" : {
+        "Target": "HTTP:80/",
+        "HealthyThreshold": "3",
+        "UnhealthyThreshold": "5",
+        "Interval": "30",
+        "Timeout": "5"
+      }
+    }
+  }
+}
