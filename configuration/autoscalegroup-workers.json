@@ -7,6 +7,11 @@
        "Description": "The AMI Id for the worker instances",
        "Type": "String"
     },
+    "INSTANCE_TYPE": {
+      "Description": "The instance type for the worker instances",
+      "Type": "String",
+      "DefaultValue": "m1.small"
+    },
     "USERDATA": {
       "Description": "User data used to initialize the worker instances",
       "Type": "String"
@@ -22,8 +27,21 @@
   },
   
   "Resources": {
-    "AutoScalingGroup": {
-      
+    "WorkerLaunchConfiguration" : {
+      "Type": "AWS::AutoScaling::LaunchConfiguration",
+      "Properties" : {
+        "ImageId" : { "Ref": "AMI_ID" },
+        "InstanceType" : { "Ref": "INSTANCE_TYPE"},
+      }
+    },
+    "WorkerAutoScalingGroup" : {
+      "Type" : "AWS::AutoScaling::AutoScalingGroup",
+      "Properties" : {
+        "AvailabilityZones" : { "Fn::GetAZs" : ""},
+        "LaunchConfigurationName" : { "Ref" : "WorkerLaunchConfiguration" },
+        "MinSize" : "1",
+        "MaxSize" : "3"
+      }
     }
   },
   
