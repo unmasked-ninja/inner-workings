@@ -3,8 +3,18 @@
   "Description": "Application Private Subnet",
   
   "Parameters": {
-    "CIDRBLOCK": {
-      "Description": "CIDR block for the Private Subnet",
+    "VPC_ID": {
+      "Description": "The VPC to create this subnet in",
+      "Type": "String"
+    },
+    "AVAILABLILITY_ZONE": {
+      "Description": "The availability zone for this subnet",
+      "Type": "String",
+      "Default": { "Fn:Select": [ "0", { "Fn:GetAZs": "" } ] },
+      "AllowedValues": { "Fn:GetAZs": "" }
+    }
+    "CIDR_BLOCK": {
+      "Description": "The CIDR block for the subnet",
       "Type": "String",
       "Default": "10.0.100.0/24",
       "AllowedValues": [
@@ -29,20 +39,9 @@
     "PrivateSubnet": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
-        "VpcId": {
-          "Ref": "VPC"
-        },
-        "CidrBlock": {
-          "Ref": "CIDRBLOCK"
-        },
-        "AvailibilityZone": {
-          "Fn:Select": [
-            "0",
-            {
-              "Fn:GetAZs": ""
-            }
-          ]
-        },
+        "VpcId": { "Ref": "VPC_ID" },
+        "CidrBlock": { "Ref": "CIDR_BLOCK" },
+        "AvailibilityZone": { "Ref": "AVAILABLITY_ZONE" },
         "Tags": [
           {
             "Key": "Network",
