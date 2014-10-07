@@ -1,0 +1,33 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Autoscaling Group for Workers",
+  
+  "Parameters": {
+    "AMI_ID": {
+       "Description": "The AMI Id for the worker instances",
+       "Type": "String"
+    },
+    "USERDATA": {
+      "Description": "User data used to initialize the worker instances",
+      "Type": "String"
+    },
+    "SUBNETS": {
+      "Description": "The subnets (availbility zones) to launch instances into",
+      "Type": "String"
+    }
+    "NAT_NAMES": {
+      "Description": "The names of the NAT instances (or Load Balancers) which allow access to the internet for this autoscaling group",
+      "Type": "String"
+    }
+  },
+  
+  "Resources": {
+    "AutoScalingGroup": {
+      
+    }
+  },
+  
+  "Outputs": {
+    
+  }
+}
