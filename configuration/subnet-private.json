@@ -32,6 +32,10 @@
         "10.2.103.0/24"
       ],
       "ConstraintDescription": "must be a valid CIDR block which is part of our network plan"
+    },
+    "NAT_ID": {
+      "Description": "The NAT (or load balancer) used to access the internet from this subnet",
+      "Type": "String"
     }
   },
   
@@ -48,6 +52,34 @@
             "Value": "Private"
           }
         ]
+      }
+    },
+    "PrivateRouteTable": {
+      "Type" : "AWS::EC2::RouteTable",
+      "Properties" : {
+        "VpcId" : { "Ref": "VPC_ID" },
+        "Tags" : [
+          {
+            "Key": "Network",
+            "Value": "Private"
+          }
+        ]
+      }
+    },
+    "LocalRoute": {
+      "Type" : "AWS::EC2::Route",
+      "Properties" : {
+        "RouteTableId": { "Ref": "PrivateRouteTable" },
+        "DestinationCidrBlock":  { "Ref": "CIDR_BLOCK" },
+        "GatewayId" : "local"
+      }
+    },
+    "NATRoute": {
+      "Type" : "AWS::EC2::Route",
+      "Properties" : {
+        "RouteTableId": { "Ref": "PrivateRouteTable" },
+        "DestinationCidrBlock" : "0.0.0.0/0",
+        "InstanceId" : { "Ref": "NAT_ID" }
       }
     }
   }
