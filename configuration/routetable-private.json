@@ -1,0 +1,43 @@
+{
+  "Parameters": {
+    "VPC_ID": {
+      "Description": "The VPC to create this route table in",
+      "Type": "String"
+    },
+    "NAT_ID": {
+      "Desciption": "The NAT instance (or load balancer) used to connect to the internet",
+      "Type": "String"
+    }
+  },
+
+  "Resources": {
+    "PrivateRouteTable": {
+      "Type" : "AWS::EC2::RouteTable",
+      "Properties" : {
+        "VpcId" : { "Ref": "VPC_ID" },
+        "Tags" : [
+          {
+            "Key": "Network",
+            "Value": "Private"
+          }
+        ]
+      }
+    },
+    "LocalRoute": {
+      "Type" : "AWS::EC2::Route",
+      "Properties" : {
+        "RouteTableId": { "Ref": "PrivateRouteTable" },
+        "DestinationCidrBlock":  { "Ref": "CIDR_BLOCK" },
+        "GatewayId" : "local"
+      }
+    },
+    "NATRoute": {
+      "Type" : "AWS::EC2::Route",
+      "Properties" : {
+        "RouteTableId": { "Ref": "PrivateRouteTable" },
+        "DestinationCidrBlock" : "0.0.0.0/0",
+        "InstanceId" : { "Ref": "NAT_ID" }
+      }
+    }
+  }
+}
