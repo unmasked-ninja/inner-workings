@@ -12,7 +12,7 @@
       "Type": "String",
       "Default": { "Fn:Select": [ "0", { "Fn:GetAZs": "" } ] },
       "AllowedValues": { "Fn:GetAZs": "" }
-    }
+    },
     "CIDR_BLOCK": {
       "Description": "The CIDR block for the subnet",
       "Type": "String",
